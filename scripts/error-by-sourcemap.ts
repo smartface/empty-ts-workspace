@@ -1,5 +1,9 @@
-import Application = require("sf-core/application");
-import System = require("sf-core/device/system");
+import Application from "sf-core/application";
+import System from "sf-core/device/system";
+import File from 'sf-core/io/file';
+import FileStream from 'sf-core/io/filestream';
+import Path from 'sf-core/io/path';
+import sourceMap from 'source-map';
 
 declare interface SourcePosition {
     line: number;
@@ -12,17 +16,13 @@ type ErrorStackLine = {
     path: string;
 };
 declare interface SourceMapData {
-  version: number;
-  file: string;
-  sourceRoot: string;
-  sources: string;
-  names: string[];
-  mappings: string;
+    version: number;
+    file: string;
+    sourceRoot: string;
+    sources: string;
+    names: string[];
+    mappings: string;
 }
-
-import File = require('sf-core/io/file');
-import FileStream = require('sf-core/io/filestream');
-import Path = require('sf-core/io/path');
 
 function parseErrorStackIOS(lines: string[]): (null | ErrorStackLine)[] {
     const lineRegex = /^(?:(.+)(?:\@(.*)\:(\d+)(?::(\d+)))|(?:(.*)\:(\d+)(?::(\d+))))/;
@@ -31,7 +31,7 @@ function parseErrorStackIOS(lines: string[]): (null | ErrorStackLine)[] {
 
     return parsed
         .map(parsedLine => {
-            if(parsedLine){
+            if (parsedLine) {
                 const res = parsedLine
                     .filter(res => !!res);
 
@@ -58,7 +58,7 @@ function parseErrorStackAndroid(lines: string[]): (null | ErrorStackLine)[] {
 
     return parsed
         .map(parsedLine => {
-            if(parsedLine){
+            if (parsedLine) {
                 const res = parsedLine
                     .filter(res => !!res);
 
@@ -80,7 +80,7 @@ function parseErrorStackAndroid(lines: string[]): (null | ErrorStackLine)[] {
 
 
 export function errorStackBySourceMap(e: Error): Error {
-    if(!e.stack)
+    if (!e.stack)
         return e;
     const lines = e.stack.split('\n');
 
@@ -91,13 +91,13 @@ export function errorStackBySourceMap(e: Error): Error {
             .map((stackLine, index) => {
                 if (stackLine) {
                     const mapFilePath = scriptsRoot + stackLine.path + ".map";
-                    var mapFile = new File({
+                    const mapFile = new File({
                         path: mapFilePath
                     });
 
                     if (mapFile.exists) {
                         const mapData = mapFile.openStream(FileStream.StreamType.READ, FileStream.ContentMode.BINARY).readToEnd() as string;
-                        var smc = new sourceMap.SourceMapConsumer(JSON.parse(mapData));
+                        const smc = new sourceMap.SourceMapConsumer(JSON.parse(mapData));
                         const originalPosition: SourcePosition = smc.originalPositionFor({
                             line: stackLine.line,
                             column: stackLine.column
@@ -115,10 +115,8 @@ export function errorStackBySourceMap(e: Error): Error {
         return e;
     } finally {
         return {
-        ...e,
-        stack: parsedStack.join('\n')
-    }
+            ...e,
+            stack: parsedStack.join('\n')
+        }
     }
 }
-
-const sourceMap = require('source-map');

@@ -1,46 +1,42 @@
-import HeaderBarItem = require("sf-core/ui/headerbaritem");
-import touch = require("sf-extension-utils/lib/touch");
-import Image = require("sf-core/ui/image");
-import PageTitleLayout  from "components/PageTitleLayout";
-import componentContextPatch from "@smartface/contx/lib/smartface/componentContextPatch";
-import Color = require("sf-core/ui/color");
-import System = require("sf-core/device/system");
 import Page2Design from 'generated/pages/page2';
+import HeaderBarItem from "sf-core/ui/headerbaritem";
+import touch from "sf-extension-utils/lib/touch";
+import Image from "sf-core/ui/image";
+import PageTitleLayout from "components/PageTitleLayout";
+import componentContextPatch from "@smartface/contx/lib/smartface/componentContextPatch";
+import Color from "sf-core/ui/color";
+import System from "sf-core/device/system";
 
 export default class Page2 extends Page2Design {
-	constructor() {
-		super();
-		// Overrides super.onShow method
-		this.onShow = onShow.bind(this, this.onShow.bind(this));
-		// Overrides super.onLoad method
+    constructor() {
+        super();
+        // Overrides super.onShow method
+        this.onShow = onShow.bind(this, this.onShow.bind(this));
+        // Overrides super.onLoad method
         this.onLoad = onLoad.bind(this, this.onLoad.bind(this));
         touch.addPressEvent(this.btnSayHello, () => {
             alert("Hello World!");
         });
-	}
+    }
 }
 
 /**
  * @event onShow
  * This event is called when a page appears on the screen (everytime).
- * @param {function} superOnShow super onShow function
- * @param {Object} parameters passed from Router.go function
  */
-function onShow(superOnShow) {
-    const { routeData, headerBar } = this;
+function onShow(superOnShow: () => void) {
     superOnShow();
-    headerBar.titleLayout.applyLayout();
-    routeData && console.info(routeData.message);
+    this.headerBar.titleLayout.applyLayout();
+    this.routeData && console.info(this.routeData.message);
 }
 
 /**
  * @event onLoad
  * This event is called once when page is created.
- * @param {function} superOnLoad super onLoad function
  */
-function onLoad(superOnLoad) {
-    var headerBar;
+function onLoad(superOnLoad: () => void) {
     superOnLoad();
+    let headerBar;
     this.headerBar.titleLayout = new PageTitleLayout();
     componentContextPatch(this.headerBar.titleLayout, "titleLayout");
     this.headerBar.setItems([new HeaderBarItem({

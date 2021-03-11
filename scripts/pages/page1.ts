@@ -1,7 +1,7 @@
 import Page1Design from 'generated/pages/page1';
 import componentContextPatch from "@smartface/contx/lib/smartface/componentContextPatch";
-import PageTitleLayout  from "components/PageTitleLayout";
-import System = require("sf-core/device/system");
+import PageTitleLayout from "components/PageTitleLayout";
+import System from "sf-core/device/system";
 
 export default class Page1 extends Page1Design {
     router: any;
@@ -20,10 +20,8 @@ export default class Page1 extends Page1Design {
 /**
  * @event onShow
  * This event is called when a page appears on the screen (everytime).
- * @param {function} superOnShow super onShow function
- * @param {Object} parameters passed from Router.go function
  */
-function onShow(superOnShow) {
+function onShow(superOnShow: () => void) {
   superOnShow();
   this.headerBar.titleLayout.applyLayout();
 }
@@ -31,9 +29,8 @@ function onShow(superOnShow) {
 /**
  * @event onLoad
  * This event is called once when page is created.
- * @param {function} superOnLoad super onLoad function
  */
-function onLoad(superOnLoad) {
+function onLoad(superOnLoad: () => void) {
     superOnLoad();
     console.info('Onload page1');
     this.headerBar.leftItemEnabled = false;

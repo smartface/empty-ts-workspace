@@ -1,11 +1,18 @@
 declare function extend(constructor: () => void): () => FunctionConstructor
 
-declare function require(param:string):any;
-declare const lang: {[key:string]: string};
+declare function require(param: string): any;
+declare const lang: { [key: string]: any };
 declare const SMF: any;
+declare const __SF_NSURL: any;
+declare const __SF_Dispatch: {
+    mainAsync: (func: (...args: any[]) => any) => void
+}
 declare const Device: any;
-declare const global: any;
-declare const alert: any;
+declare const global: { [key: string]: any } & {
+    lang: { [key: string]: any },
+    requireClass: (...args: any[]) => any
+};
+declare const alert: (...args: any[]) => any;
 type StyleContextDispatch = {
     dispatch: (action: { [key: string]: any }) => void;
 }
