@@ -4,6 +4,7 @@ import {
     NativeStackRouter as StackRouter,
     Route
 } from "@smartface/router";
+import * as Pages from 'pages';
 import "sf-extension-utils/lib/router/goBack"; // Implements onBackButtonPressed
 
 const router = Router.of({
@@ -16,14 +17,14 @@ const router = Router.of({
                 Route.of({
                     path: "/pages/page1",
                     build: buildExtender({ 
-                        getPageClass: () => require("pages/page1").default, 
+                        getPageClass: () => Pages.Page1, 
                         headerBarStyle: { visible: true } 
                     })
                 }),
                 Route.of({
                     path: "/pages/page2",
                     build: buildExtender({ 
-                        getPageClass: () => require("pages/page2").default, 
+                        getPageClass: () => Pages.Page2, 
                         headerBarStyle: { visible: true } 
                     })
                 }),
